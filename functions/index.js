@@ -52,13 +52,19 @@ app.use((req, res, next) => {
     let lang = req.query.lang || req.cookies.lang;
     
     if (!lang) {
+        // Firebase Hosting normalizes accept-language to base language codes (e.g. zh-TW -> zh)
+        // We must restore the original header if available before parsing
+        if (req.headers['x-orig-accept-language']) {
+            req.headers['accept-language'] = req.headers['x-orig-accept-language'];
+        }
+        
         const acceptedLangs = req.acceptsLanguages();
         if (acceptedLangs && acceptedLangs.length > 0) {
             for (let accepted of acceptedLangs) {
                 const lower = accepted.toLowerCase();
-                if (lower.startsWith('zh-tw') || lower.startsWith('zh-hk') || lower === 'zh-hant') {
+                if (lower.startsWith('zh-tw') || lower.startsWith('zh-hk') || lower.startsWith('zh-hant')) {
                     lang = 'zh-tw'; break;
-                } else if (lower.startsWith('zh-cn') || lower.startsWith('zh-hans') || lower === 'zh') {
+                } else if (lower.startsWith('zh-cn') || lower.startsWith('zh-sg') || lower.startsWith('zh-hans') || lower === 'zh') {
                     lang = 'zh-cn'; break;
                 } else if (lower.startsWith('ja')) {
                     lang = 'ja-jp'; break;
