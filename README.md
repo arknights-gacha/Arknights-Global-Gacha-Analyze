@@ -17,8 +17,8 @@
 * **Extension Ecosystem**: Fully integrated with the developed Chromium extension "One-Click Token Extractor", perfectly solving the high-barrier process of manually opening F12 developer tools to copy data.
 * **擴充功能生態**: 完全整合開發的 Chromium 擴充功能「一鍵截取 Token」，完美解決必須手動開啟 F12 開發者工具複製資料的高門檻流程。
 
-* **Security & Cost Control**: Implements `express-rate-limit` to defend against abnormal traffic, and sets the maximum server execution instances (`maxInstances: 3`), ensuring no extra paid quota is consumed under the Blaze billing plan.
-* **安全與成本控制**: 實裝 `express-rate-limit` 防禦異常流量，並設定伺服器最高執行實例 (`maxInstances: 3`)，保障 Blaze 計費方案下不花費任何額外的付費額度。
+* **Security & Cost Control**: Implements `express-rate-limit` to defend against abnormal traffic, and sets the maximum server execution instances (`maxInstances`), ensuring no extra paid quota is consumed under the Blaze billing plan.
+* **安全與成本控制**: 實裝 `express-rate-limit` 防禦異常流量，並設定伺服器最高執行實例 (`maxInstances`)，保障 Blaze 計費方案下不花費任何額外的付費額度。
 
 ---
 
