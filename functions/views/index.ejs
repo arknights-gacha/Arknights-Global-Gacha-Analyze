@@ -8,6 +8,16 @@
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title><%= t('index_title') %></title>
+    <meta property="og:site_name" content="<%= t('main_heading') %>" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "<%- t('main_heading') %>",
+      "alternateName": "Arknights Global Gacha Analyzer",
+      "url": "https://arknights-gacha.web.app/"
+    }
+    </script>
     <link rel="canonical" href="<%= currentUrl %>" />
     <link rel="alternate" hreflang="zh-Hant" href="<%= baseUrl %>?lang=zh-tw" />
     <link rel="alternate" hreflang="zh-Hans" href="<%= baseUrl %>?lang=zh-cn" />
