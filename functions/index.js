@@ -163,6 +163,8 @@ app.post('/login', async (req, res) => {
             if (logsDoc.exists) {
                 const data = logsDoc.data();
                 let existing = data.jsonString ? JSON.parse(data.jsonString) : (data.records || []);
+                existing.sort((a, b) => b.at - a.at);
+                logs.sort((a, b) => b.at - a.at);
                 logs = mergeLogs(logs, existing);
             }
             
@@ -194,14 +196,15 @@ app.post('/login', async (req, res) => {
                 return res.status(400).send('請提供有效的 ID');
             }
             if (logs && Array.isArray(logs)) {
-                // Ensure logs are sorted chronologically ascending before merging
-                logs.sort((a, b) => a.at - b.at);
+                // Ensure logs are sorted chronologically descending before merging
+                logs.sort((a, b) => b.at - a.at);
                 
                 const logsDocRef = db.collection('users').doc(uid).collection('data').doc('logs');
                 const logsDoc = await logsDocRef.get();
                 if (logsDoc.exists) {
                     const data = logsDoc.data();
                     let existing = data.jsonString ? JSON.parse(data.jsonString) : (data.records || []);
+                    existing.sort((a, b) => b.at - a.at);
                     logs = mergeLogs(logs, existing);
                 }
                 await db.collection('users').doc(uid).set({ info: { uid: uid, nickName: uid } }, { merge: true });

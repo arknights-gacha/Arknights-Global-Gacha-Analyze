@@ -106,8 +106,8 @@ async function fetchAllLogsSlowly(uid, yssid = '', yssidSig = '', server = 'jp')
         await sleep(200);
     }
     
-    // Sort allLogs by `at` timestamp ascending to preserve chronological order for merge
-    allLogs.sort((a, b) => a.at - b.at);
+    // Sort allLogs by `at` timestamp descending (newest to oldest) to preserve order for merge
+    allLogs.sort((a, b) => b.at - a.at);
     
     return allLogs;
 }

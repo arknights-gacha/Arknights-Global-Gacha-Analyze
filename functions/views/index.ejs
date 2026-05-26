@@ -522,7 +522,7 @@
       const chartLabels = ['6<%= t('star').trim() %>', '5<%= t('star').trim() %>', '4<%= t('star').trim() %>', '3<%= t('star').trim() %>'];
       
       const starcountsData = <%- JSON.stringify(stats.starcounts) %>;
-      const categories = ['所有卡池', '限定尋訪', '標準尋訪', '中堅尋訪', '其他尋訪'];
+      const categories = ['限定尋訪', '標準尋訪', '中堅尋訪', '其他尋訪'];
       
       categories.forEach((cat, index) => {
           let c = starcountsData[cat];
