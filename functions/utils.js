@@ -196,7 +196,7 @@ function classifyPool(poolId) {
 }
 
 function analyzeLogs(logs) {
-    let logsCopy = JSON.parse(JSON.stringify(logs));
+    let logsCopy = logs;
     logsCopy.reverse(); // Now from newest to oldest
     
     let n = logsCopy.length;
