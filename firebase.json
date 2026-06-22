@@ -9,6 +9,12 @@
         "firebase-debug.log",
         "firebase-debug.*.log",
         "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" install"
+      ],
+      "postdeploy": [
+        "rm -rf \"$RESOURCE_DIR/node_modules\""
       ]
     }
   ],
