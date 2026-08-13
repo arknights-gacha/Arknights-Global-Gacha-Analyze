@@ -11,6 +11,9 @@
 * **Dynamic Frontend**: Utilizes the EJS template engine for real-time frontend rendering with Chart.js, supporting responsive layouts for both mobile and desktop.
 * **動態前端介面**: 採用 EJS 模板引擎，並使用前端即時渲染的 Chart.js，支援手機與電腦的響應式 (Responsive) 排版。
 
+* **Multilingual with Path-based URLs**: Traditional Chinese, Simplified Chinese, Japanese and English, each served from its own URL (`/zh-tw/`, `/zh-cn/`, `/ja-jp/`, `/en-us/`) with per-page `canonical`, `hreflang` and a generated `sitemap.xml`, so search engines index every language version distinctly. Any browser language outside these falls back to English.
+* **多語系與路徑式網址**: 支援繁體中文、簡體中文、日文與英文，每個語系擁有獨立網址 (`/zh-tw/`、`/zh-cn/`、`/ja-jp/`、`/en-us/`)，並各自產生 `canonical`、`hreflang` 與 `sitemap.xml`，讓搜尋引擎能正確索引各語言版本。上述以外的瀏覽器語言一律使用英文。
+
 * **Enhanced Analytics**: Advanced analysis interface supporting layered collapsing of consecutive pull histories, "pity" accumulation statistics across gacha pools, and complete export functionality.
 * **進階資料分析**: 更進階的分析介面，支援連續抽出歷史的分層折疊、跨卡池的「已墊」累積抽數統計，以及完整的匯出 (Export) 功能。
 
@@ -81,6 +84,22 @@ firebase emulators:start --only functions,hosting
 After startup, open the local URL provided by the terminal in your browser (usually `http://localhost:5000` or `http://127.0.0.1:5000`) to test all connections and rendering results at any time.
 
 啟動完畢後，在瀏覽器打開終端機提示的本機網址 (通常為 `http://localhost:5000` 或 `http://127.0.0.1:5000`) 即可隨時測試所有連線與渲染結果。
+
+To preview a specific language, go straight to its path, e.g. `/ja-jp/login` or `/zh-tw/privacy`.
+
+若要預覽特定語系，請直接使用該語系的路徑，例如 `/ja-jp/login` 或 `/zh-tw/privacy`。
+
+### 3.1 Checking the Locale Files / 檢查語系檔
+
+After editing anything under `functions/locales/`, run the locale linter. It verifies that all four languages share the same key set, that strings rendered escaped contain no HTML, and that no translation has silently dropped links, list items or whole clauses relative to the Traditional Chinese source.
+
+修改 `functions/locales/` 底下的任何檔案後，請執行語系檢查工具。它會驗證四種語言的鍵集合是否一致、被跳脫渲染的字串是否誤含 HTML，以及是否有翻譯相對繁體中文原文漏掉了連結、列舉項目或整段條款。
+
+```bash
+node functions/lint-locales.js
+# 讓警告也視為失敗 / treat warnings as failures too
+node functions/lint-locales.js --strict
+```
 
 ### 4. Deployment / 雲端部署
 

@@ -1,0 +1,28 @@
+<%
+  // Language switcher. Expects `page` ('' | 'login' | 'privacy') and an optional
+  // `selectStyle` local for the inline style of the <select>.
+  // Switching locale keeps the visitor on the same page: /ja-jp/privacy -> /en-us/privacy.
+  const suffix = page ? '/' + page : '/';
+  const names = { 'zh-tw': '繁體中文', 'zh-cn': '简体中文', 'ja-jp': '日本語', 'en-us': 'English' };
+  const order = ['zh-tw', 'zh-cn', 'ja-jp', 'en-us'];
+%>
+<%
+  // A visible <label> is the accessible name here, so the <select> deliberately
+  // carries no aria-label: an aria-label would override the visible text for
+  // screen readers and cause a label-in-name mismatch.
+%>
+<label for="lang-select" style="<%= typeof labelStyle !== 'undefined' ? labelStyle : 'display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 0.25rem; white-space: nowrap;' %>"><%= t('lang_selector') %></label>
+<select id="lang-select" onchange="window.location.href='/'+this.value+'<%= suffix %>'" style="<%= typeof selectStyle !== 'undefined' ? selectStyle : 'background: rgba(255,255,255,0.1); color: #fff; border: 1px solid #333; padding: 0.3rem; border-radius: 4px;' %>">
+  <% order.forEach(function (l) { %>
+  <option value="<%= l %>" <%= lang === l ? 'selected' : '' %>><%= names[l] %></option>
+  <% }); %>
+</select>
+<%
+  // Real anchors so crawlers can reach every locale without executing the
+  // dropdown's JS. Visually hidden, but present in the served HTML.
+%>
+<nav aria-label="<%= t('lang_selector') %>" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;">
+  <% order.forEach(function (l) { %>
+  <a href="<%= origin %>/<%= l %><%= suffix %>" hreflang="<%= hreflangMap[l] %>"><%= names[l] %></a>
+  <% }); %>
+</nav>

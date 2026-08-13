@@ -1,3 +1,12 @@
+// ⚠️ DEPRECATED — do not run this script.
+//
+// It was a one-off generator for locales/*.json. Those JSON files have since been
+// hand-edited and are now the source of truth: they carry keys this script never
+// had (alert_file_error, alert_copied, err_*, date_recent, ...). Running it would
+// overwrite those edits and silently drop keys, breaking the UI.
+//
+// Edit functions/locales/*.json directly instead. Kept only for history.
+
 const fs = require('fs');
 const path = require('path');
 
@@ -45,7 +54,7 @@ const tw = {
   "loading_text": "正在抓取資料，請稍候…",
   "alert_no_file": "請選擇檔案",
   "alert_upload_fail": "上傳失敗: ",
-  "alert_read_fail": "讀取檔案失敗或格式不正確: ",
+  "alert_file_error": "讀取檔案失敗或格式不正確: ",
 
   // Index
   "index_title": "Arknights 抽卡紀錄",
@@ -137,7 +146,7 @@ cn['back_to_top'] = "↑ 回到页首";
 
 const en = {
   // Common
-  "lang_selector": "🌍 語言 / Language:",
+  "lang_selector": "🌍 Language:",
   "github_code": "GitHub Source",
   "privacy_policy": "Privacy Policy",
   "back_to_top": "↑ Back to Top",
@@ -179,7 +188,7 @@ const en = {
   "loading_text": "Fetching data, please wait...",
   "alert_no_file": "Please select a file",
   "alert_upload_fail": "Upload failed: ",
-  "alert_read_fail": "Failed to read file or invalid format: ",
+  "alert_file_error": "Failed to read file or invalid format: ",
 
   // Index
   "index_title": "Arknights Gacha Records",
@@ -266,7 +275,7 @@ const en = {
 
 const jp = {
   // Common
-  "lang_selector": "🌍 語言 / Language:",
+  "lang_selector": "🌍 言語:",
   "github_code": "GitHub ソース",
   "privacy_policy": "プライバシーポリシー",
   "back_to_top": "↑ トップへ戻る",
@@ -308,7 +317,7 @@ const jp = {
   "loading_text": "データを取得中、しばらくお待ちください…",
   "alert_no_file": "ファイルを選択してください",
   "alert_upload_fail": "アップロード失敗: ",
-  "alert_read_fail": "ファイルの読み込み失敗または不正な形式: ",
+  "alert_file_error": "ファイルの読み込み失敗または不正な形式: ",
 
   // Index
   "index_title": "Arknights スカウト記録",

@@ -5,24 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
   <meta name="referrer" content="no-referrer">
   <title><%= t('privacy_title') %></title>
-  <meta property="og:site_name" content="<%= t('main_heading') %>" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "<%- t('main_heading') %>",
-    "alternateName": "Arknights Global Gacha Analyzer",
-    "url": "https://arknights-gacha.web.app/"
-  }
-  </script>
-  <link rel="canonical" href="<%= currentUrl %>" />
-  <link rel="alternate" hreflang="zh-Hant" href="<%= baseUrl %>?lang=zh-tw" />
-  <link rel="alternate" hreflang="zh-Hans" href="<%= baseUrl %>?lang=zh-cn" />
-  <link rel="alternate" hreflang="en" href="<%= baseUrl %>?lang=en-us" />
-  <link rel="alternate" hreflang="ja" href="<%= baseUrl %>?lang=ja-jp" />
-  <link rel="alternate" hreflang="x-default" href="<%= baseUrl %>" />
+<%- include('partials/seo-head', { page: page }) %>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    /* The <select> popup list is drawn by the OS, which defaults to a light
+       background. Our dark theme sets a near-white text colour, which the
+       options inherit -> white-on-white, invisible on Windows. color-scheme
+       makes the browser draw native controls dark; the option rule is a
+       fallback for browsers that ignore it. */
+    :root { color-scheme: dark; }
+    option { background-color: #1a1a1a; color: #e0e0e0; }
     body {
       background-color: #000000;
       color: #e0e0e0;
@@ -80,15 +72,10 @@
 </head>
 <body>
   <div class="container">
-    <a href="/login" class="back-btn"><%= t('back_home') %></a>
-    
+    <a href="/<%= lang %>/login" class="back-btn"><%= t('back_home') %></a>
+
     <div style="position: absolute; top: 1rem; right: 1rem; z-index: 100;">
-      <select onchange="window.location.href='?lang='+this.value" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid #333; padding: 0.3rem; border-radius: 4px;">
-        <option value="zh-tw" <%= lang === 'zh-tw' ? 'selected' : '' %>>繁體中文</option>
-        <option value="zh-cn" <%= lang === 'zh-cn' ? 'selected' : '' %>>简体中文</option>
-        <option value="ja-jp" <%= lang === 'ja-jp' ? 'selected' : '' %>>日本語</option>
-        <option value="en-us" <%= lang === 'en-us' ? 'selected' : '' %>>English</option>
-      </select>
+<%- include('partials/lang-switcher', { page: page }) %>
     </div>
     <h1><%= t('privacy_h1') %></h1>
     
@@ -138,6 +125,8 @@
 
     <h2><%= t('privacy_contact_title') %></h2>
     <p><%- t('privacy_contact_1') %></p>
+
+    <p style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #333; color: #aaa; font-size: 0.9rem;"><%= t('governing_language') %></p>
   </div>
 </body>
 </html>

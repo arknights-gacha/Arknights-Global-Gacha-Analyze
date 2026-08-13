@@ -8,28 +8,20 @@
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title><%= t('index_title') %></title>
-    <meta property="og:site_name" content="<%= t('main_heading') %>" />
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "<%- t('main_heading') %>",
-      "alternateName": "Arknights Global Gacha Analyzer",
-      "url": "https://arknights-gacha.web.app/"
-    }
-    </script>
-    <link rel="canonical" href="<%= currentUrl %>" />
-    <link rel="alternate" hreflang="zh-Hant" href="<%= baseUrl %>?lang=zh-tw" />
-    <link rel="alternate" hreflang="zh-Hans" href="<%= baseUrl %>?lang=zh-cn" />
-    <link rel="alternate" hreflang="en" href="<%= baseUrl %>?lang=en-us" />
-    <link rel="alternate" hreflang="ja" href="<%= baseUrl %>?lang=ja-jp" />
-    <link rel="alternate" hreflang="x-default" href="<%= baseUrl %>" />
+<%- include('partials/seo-head', { page: page }) %>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <!-- 載入你的 CSS -->
     <link rel="stylesheet" href="/css/your.css" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+      /* The <select> popup list is drawn by the OS, which defaults to a light
+         background. Our dark theme sets a near-white text colour, which the
+         options inherit -> white-on-white, invisible on Windows. color-scheme
+         makes the browser draw native controls dark; the option rule is a
+         fallback for browsers that ignore it. */
+      :root { color-scheme: dark; }
+      option { background-color: #1a1a1a; color: #e0e0e0; }
       body {
         font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       }
@@ -116,13 +108,13 @@
               <div class="MvFHTi">
                 <div>
                   <a href="/export" download style="display: block; width: 100%; height: 100%; color: inherit; text-decoration: none;">
-                    導出結果
+                    <%= t('export_results') %>
                   </a>
                   <div class="kR9c6i"></div>
                 </div>
                 <div>
                   <a href="/logout" style="display: block; width: 100%; height: 100%; color: inherit; text-decoration: none;">
-                    登出
+                    <%= t('logout') %>
                   </a>
                   <div class="kR9c6i"></div>
                 </div>
@@ -178,12 +170,11 @@
               <a href="/export" download style="display: block; width: 100%; padding: 0.8rem; text-align: center; background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; border-radius: 4px; margin-bottom: 0.8rem; font-weight: bold; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'"><%= t('export_results') %></a>
               <a href="/logout" style="display: block; width: 100%; padding: 0.8rem; text-align: center; background: rgba(27,209,254,0.2); color: #1bd1fe; text-decoration: none; border-radius: 4px; font-weight: bold; transition: background 0.3s;" onmouseover="this.style.background='rgba(27,209,254,0.3)'" onmouseout="this.style.background='rgba(27,209,254,0.2)'"><%= t('logout') %></a>
               
-              <select onchange="window.location.href='?lang='+this.value" style="display: block; width: 100%; margin-top: 1.5rem; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid #333; padding: 0.5rem; border-radius: 4px; font-size: 0.9rem; outline: none; cursor: pointer;">
-                <option value="zh-tw" <%= lang === 'zh-tw' ? 'selected' : '' %>>繁體中文</option>
-                <option value="zh-cn" <%= lang === 'zh-cn' ? 'selected' : '' %>>简体中文</option>
-                <option value="ja-jp" <%= lang === 'ja-jp' ? 'selected' : '' %>>日本語</option>
-                <option value="en-us" <%= lang === 'en-us' ? 'selected' : '' %>>English</option>
-              </select>
+<%- include('partials/lang-switcher', {
+                page: page,
+                labelStyle: 'display: block; margin-top: 1.5rem; margin-bottom: 0.35rem; font-size: 0.8rem; color: #aaa;',
+                selectStyle: 'display: block; width: 100%; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid #333; padding: 0.5rem; border-radius: 4px; font-size: 0.9rem; outline: none; cursor: pointer;'
+              }) %>
             </div>
           </div>
         </div>
@@ -207,7 +198,7 @@
               <!-- highlight顯示區 改用 HTML + CSS -->
               <div class="dashboard-panel">
                   <% 
-                    let earliestDate = logs.length > 0 ? logs.reduce((min, p) => p.time < min ? p.time : min, logs[0].time).split(' ')[0] : '近期';
+                    let earliestDate = logs.length > 0 ? logs.reduce((min, p) => p.time < min ? p.time : min, logs[0].time).split(' ')[0] : t('date_recent');
                     let lastCounts = stats.starcountsPool[stats.lastPullId] || { '5': 0, '4': 0, '3': 0, '2': 0 };
                     let lastTotal = lastCounts['5'] + lastCounts['4'] + lastCounts['3'] + lastCounts['2'];
                     let allCounts = stats.starcounts['所有卡池'];
@@ -324,7 +315,7 @@
                     let recentGroups = [];
                     let currentRecentGroup = null;
                     logs.filter(item => String(item.rarity) === '5').forEach(item => {
-                        let currentPoolName = item.poolName || `${item.poolId}（名稱未顯示）`;
+                        let currentPoolName = item.poolName || `${item.poolId}${t('pool_name_hidden')}`;
                         let currentPoolId = item.poolId;
                         if (!currentRecentGroup || currentRecentGroup.poolId !== currentPoolId) {
                             currentRecentGroup = { poolName: currentPoolName, poolId: currentPoolId, items: [] };
@@ -365,7 +356,7 @@
                         </div>
                       </div>
                       <div class="xWZ6Cb">
-                        <%= item.poolName %><% if (!item.poolName) { %><%= item.poolId %>（名稱未顯示）<% } %>
+                        <%= item.poolName %><% if (!item.poolName) { %><%= item.poolId %><%= t('pool_name_hidden') %><% } %>
                       </div>
                       <div class="r9iEWS"><%= item.time %></div>
                     </div>
@@ -387,7 +378,7 @@
                 <span></span><span></span>
               </div>
               <div style="display: flex; justify-content: flex-start; margin-bottom: 0.5rem; padding-left: 13.5rem;">
-                 <span style="font-size: 0.9rem; color: #f7ff00; cursor: pointer; user-select: none; font-weight: bold;" onclick="toggleAllGroups('history')">[ 全部摺疊 / 展開 ]</span>
+                 <span style="font-size: 0.9rem; color: #f7ff00; cursor: pointer; user-select: none; font-weight: bold;" onclick="toggleAllGroups('history')"><%= t('collapse_all') %></span>
               </div>
               <div class="mzlLY0">
                 <div class="pvfQQe">
@@ -400,7 +391,7 @@
                     let allGroups = [];
                     let currentAllGroup = null;
                     logs.forEach(item => {
-                        let currentPoolName = item.poolName || `${item.poolId}（名稱未顯示）`;
+                        let currentPoolName = item.poolName || `${item.poolId}${t('pool_name_hidden')}`;
                         let currentPoolId = item.poolId;
                         if (!currentAllGroup || currentAllGroup.poolId !== currentPoolId) {
                             currentAllGroup = { poolName: currentPoolName, poolId: currentPoolId, items: [] };
@@ -414,7 +405,7 @@
                       let pTotal = pStats['5'] + pStats['4'] + pStats['3'] + pStats['2'];
                   %>
                   <div class="pool-group-wrapper" data-pool="<%= group.poolId %>">
-                    <div class="tshJ_L" style="background: rgba(255,255,255,0.05); margin: 6px 0 2px 0; height: 2rem; padding: 4px 15px; font-size: 1rem; line-height: 1.5; color: #f7ff00; border-radius: 4px; border-left: 4px solid #f7ff00;"><%= group.poolName %>（<%= pTotal %>抽） ▲</div>
+                    <div class="tshJ_L" style="background: rgba(255,255,255,0.05); margin: 6px 0 2px 0; height: 2rem; padding: 4px 15px; font-size: 1rem; line-height: 1.5; color: #f7ff00; border-radius: 4px; border-left: 4px solid #f7ff00;"><%= group.poolName %>（<%= pTotal %><%= t('pulls_count_suffix') %> ▲</div>
                     <div class="collapsible-content open" style="margin-bottom: 0.5rem;">
                       <% group.items.forEach(function(item) { 
                         let sc = starClasses[item.rarity] || 'spIT3K';
@@ -439,7 +430,7 @@
                         </div>
                       </div>
                       <div class="xWZ6Cb">
-                        <%= item.poolName %><% if (!item.poolName) { %><%= item.poolId %>（名稱未顯示）<% } %>
+                        <%= item.poolName %><% if (!item.poolName) { %><%= item.poolId %><%= t('pool_name_hidden') %><% } %>
                       </div>
                       <div class="r9iEWS"><%= item.time %></div>
                     </div>
@@ -606,7 +597,7 @@
     <div id="footer-menu-container" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 99999; font-family: sans-serif; user-select: none;">
       <div id="footer-menu-links" style="display: none; flex-direction: column; align-items: flex-end; margin-bottom: 0.5rem; gap: 0.5rem;">
         <a href="https://github.com/kaihuang1122/Arknights-Global-Gacha-Analyze" target="_blank" style="background: rgba(0,0,0,0.8); color: #1bd1fe; padding: 0.6rem 1.2rem; border-radius: 4px; text-decoration: none; border: 1px solid #1bd1fe; font-size: 0.9rem; white-space: nowrap; font-weight: bold; transition: background 0.3s;" onmouseover="this.style.background='rgba(27,209,254,0.2)'" onmouseout="this.style.background='rgba(0,0,0,0.8)'"><%= t('github_code') %></a>
-        <a href="/privacy" style="background: rgba(0,0,0,0.8); color: #1bd1fe; padding: 0.6rem 1.2rem; border-radius: 4px; text-decoration: none; border: 1px solid #1bd1fe; font-size: 0.9rem; white-space: nowrap; font-weight: bold; transition: background 0.3s;" onmouseover="this.style.background='rgba(27,209,254,0.2)'" onmouseout="this.style.background='rgba(0,0,0,0.8)'"><%= t('privacy_policy') %></a>
+        <a href="/<%= lang %>/privacy" style="background: rgba(0,0,0,0.8); color: #1bd1fe; padding: 0.6rem 1.2rem; border-radius: 4px; text-decoration: none; border: 1px solid #1bd1fe; font-size: 0.9rem; white-space: nowrap; font-weight: bold; transition: background 0.3s;" onmouseover="this.style.background='rgba(27,209,254,0.2)'" onmouseout="this.style.background='rgba(0,0,0,0.8)'"><%= t('privacy_policy') %></a>
         <a href="javascript:void(0);" onclick="document.body.scrollTo({top: 0, behavior: 'smooth'}); document.documentElement.scrollTo({top: 0, behavior: 'smooth'}); window.scrollTo({top: 0, behavior: 'smooth'});" style="background: rgba(0,0,0,0.8); color: #1bd1fe; padding: 0.6rem 1.2rem; border-radius: 4px; text-decoration: none; border: 1px solid #1bd1fe; font-size: 0.9rem; white-space: nowrap; font-weight: bold; transition: background 0.3s;" onmouseover="this.style.background='rgba(27,209,254,0.2)'" onmouseout="this.style.background='rgba(0,0,0,0.8)'"><%= t('back_to_top') %></a>
       </div>
       <div id="footer-menu-toggle" style="background: rgba(0, 0, 0, 0.8); width: 3rem; height: 3rem; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 2px solid #1bd1fe; float: right; transition: all 0.3s; color: #1bd1fe; font-size: 1.2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">

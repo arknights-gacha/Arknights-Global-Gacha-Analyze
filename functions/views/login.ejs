@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="<%= lang === 'zh-tw' ? 'zh-Hant' : lang === 'zh-cn' ? 'zh-Hans' : lang === 'ja-jp' ? 'ja' : 'en' %>">
   <head>
-    <meta name="google-site-verification" content="-r9-42OaiijcNFEbHg0HM3QdyfWyt6R-rEErIIRceak" />
-    <meta name="keywords" content="Arknights, 明日方舟, Gacha, 抽卡, 尋訪, Global, 國際服, Yostar, 悠星服, 英服, 美服, 日服, 韓服, Record, 尋訪紀錄, 紀錄分析, Analytics">
-    <meta name="description" content="<%= t('description') %>">
     <meta charset="utf-8" />
     <meta http-equiv="pragma" content="no-cache" />
     <meta http-equiv="cache-control" content="no-cache" />
@@ -11,26 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="no-referrer">
     <title><%= t('login_title') %></title>
-    <meta property="og:site_name" content="<%= t('main_heading') %>" />
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "<%- t('main_heading') %>",
-      "alternateName": "Arknights Global Gacha Analyzer",
-      "url": "https://arknights-gacha.web.app/"
-    }
-    </script>
-    <link rel="canonical" href="<%= currentUrl %>" />
-    <link rel="alternate" hreflang="zh-Hant" href="<%= baseUrl %>?lang=zh-tw" />
-    <link rel="alternate" hreflang="zh-Hans" href="<%= baseUrl %>?lang=zh-cn" />
-    <link rel="alternate" hreflang="en" href="<%= baseUrl %>?lang=en-us" />
-    <link rel="alternate" hreflang="ja" href="<%= baseUrl %>?lang=ja-jp" />
-    <link rel="alternate" hreflang="x-default" href="<%= baseUrl %>" />
+<%- include('partials/seo-head', { page: page }) %>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="stylesheet" href="/css/your.css" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+      /* The <select> popup list is drawn by the OS, which defaults to a light
+         background. Our dark theme sets a near-white text colour, which the
+         options inherit -> white-on-white, invisible on Windows. color-scheme
+         makes the browser draw native controls dark; the option rule is a
+         fallback for browsers that ignore it. */
+      :root { color-scheme: dark; }
+      option { background-color: #1a1a1a; color: #e0e0e0; }
       body {
         font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       }
@@ -107,12 +96,7 @@
   <body class="dark-mode" style="background-color: #000000; color: #e0e0e0">
     <!-- 大標題 -->
     <div style="position: absolute; top: 1rem; right: 1rem; z-index: 100;">
-      <select onchange="window.location.href='?lang='+this.value" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid #333; padding: 0.3rem; border-radius: 4px;">
-        <option value="zh-tw" <%= lang === 'zh-tw' ? 'selected' : '' %>>繁體中文</option>
-        <option value="zh-cn" <%= lang === 'zh-cn' ? 'selected' : '' %>>简体中文</option>
-        <option value="ja-jp" <%= lang === 'ja-jp' ? 'selected' : '' %>>日本語</option>
-        <option value="en-us" <%= lang === 'en-us' ? 'selected' : '' %>>English</option>
-      </select>
+<%- include('partials/lang-switcher', { page: page }) %>
     </div>
     <!-- 大標題 -->
     <div class="HgfD8Q" style="padding: 1.5rem; text-align: center">
@@ -150,6 +134,7 @@
         </div>
         <form id="cookieForm" method="post" action="/login">
           <input type="hidden" name="method" value="cookie" />
+          <input type="hidden" name="lang" value="<%= lang %>" />
           <div class="input-group">
             <label class="input-label"><%= t('server_label') %></label>
             <select name="server" class="login-input" required>
@@ -179,6 +164,7 @@
         </div>
         <form method="post" action="/login">
           <input type="hidden" name="method" value="existing" />
+          <input type="hidden" name="lang" value="<%= lang %>" />
           <div class="input-group">
             <label class="input-label"><%= t('uid_label') %></label>
             <input name="uid" class="login-input" type="text" required />
@@ -279,6 +265,7 @@
           <div><%= t('disclaimer_2') %></div>
           <div><%= t('disclaimer_3') %></div>
           <div><%= t('disclaimer_4') %></div>
+          <div style="margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid #333; color: #aaa;"><%= t('governing_language') %></div>
         </div>
       </div>
     </div>
@@ -324,20 +311,20 @@
                   const res = await fetch('/login', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ method: 'upload', uid: uid, logs: logs })
+                      body: JSON.stringify({ method: 'upload', uid: uid, logs: logs, lang: '<%= lang %>' })
                   });
                   
                   if (res.redirected) {
                       window.location.href = res.url;
                   } else if (res.ok) {
-                      window.location.href = '/';
+                      window.location.href = '/<%= lang %>/';
                   } else {
                       const errorText = await res.text();
                       alert("<%= t('alert_upload_fail') %>" + errorText);
                       document.getElementById("loadingOverlay").style.display = "none";
                   }
               } catch (err) {
-                  alert("<%= t('alert_read_fail') %>" + err.message);
+                  alert("<%= t('alert_file_error') %>" + err.message);
                   console.error(err);
                   document.getElementById("loadingOverlay").style.display = "none";
               }
@@ -349,7 +336,7 @@
     <div id="footer-menu-container" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 99999; font-family: sans-serif; user-select: none;">
       <div id="footer-menu-links" style="display: none; flex-direction: column; align-items: flex-end; margin-bottom: 0.5rem; gap: 0.5rem;">
         <a href="https://github.com/kaihuang1122/Arknights-Global-Gacha-Analyze" target="_blank" style="background: rgba(0,0,0,0.8); color: #1bd1fe; padding: 0.6rem 1.2rem; border-radius: 4px; text-decoration: none; border: 1px solid #1bd1fe; font-size: 0.9rem; white-space: nowrap; font-weight: bold; transition: background 0.3s;" onmouseover="this.style.background='rgba(27,209,254,0.2)'" onmouseout="this.style.background='rgba(0,0,0,0.8)'"><%= t('github_code') %></a>
-        <a href="/privacy" style="background: rgba(0,0,0,0.8); color: #1bd1fe; padding: 0.6rem 1.2rem; border-radius: 4px; text-decoration: none; border: 1px solid #1bd1fe; font-size: 0.9rem; white-space: nowrap; font-weight: bold; transition: background 0.3s;" onmouseover="this.style.background='rgba(27,209,254,0.2)'" onmouseout="this.style.background='rgba(0,0,0,0.8)'"><%= t('privacy_policy') %></a>
+        <a href="/<%= lang %>/privacy" style="background: rgba(0,0,0,0.8); color: #1bd1fe; padding: 0.6rem 1.2rem; border-radius: 4px; text-decoration: none; border: 1px solid #1bd1fe; font-size: 0.9rem; white-space: nowrap; font-weight: bold; transition: background 0.3s;" onmouseover="this.style.background='rgba(27,209,254,0.2)'" onmouseout="this.style.background='rgba(0,0,0,0.8)'"><%= t('privacy_policy') %></a>
         <a href="javascript:void(0);" onclick="document.body.scrollTo({top: 0, behavior: 'smooth'}); document.documentElement.scrollTo({top: 0, behavior: 'smooth'}); window.scrollTo({top: 0, behavior: 'smooth'});" style="background: rgba(0,0,0,0.8); color: #1bd1fe; padding: 0.6rem 1.2rem; border-radius: 4px; text-decoration: none; border: 1px solid #1bd1fe; font-size: 0.9rem; white-space: nowrap; font-weight: bold; transition: background 0.3s;" onmouseover="this.style.background='rgba(27,209,254,0.2)'" onmouseout="this.style.background='rgba(0,0,0,0.8)'"><%= t('back_to_top') %></a>
       </div>
       <div id="footer-menu-toggle" style="background: rgba(0, 0, 0, 0.8); width: 3rem; height: 3rem; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 2px solid #1bd1fe; float: right; transition: all 0.3s; color: #1bd1fe; font-size: 1.2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">

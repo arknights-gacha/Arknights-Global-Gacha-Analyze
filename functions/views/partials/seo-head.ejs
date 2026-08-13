@@ -1,0 +1,33 @@
+<%
+  // Shared SEO head block. Expects a `page` local: '' (home), 'login' or 'privacy'.
+  // Every URL below is built from origin + lang + page so each localized page
+  // points at its own canonical rather than a single hardcoded homepage URL.
+  const suffix = page ? '/' + page : '/';
+  const pageUrl = origin + '/' + lang + suffix;
+  const ogLocale = lang === 'zh-tw' ? 'zh_TW'
+                 : lang === 'zh-cn' ? 'zh_CN'
+                 : lang === 'ja-jp' ? 'ja_JP' : 'en_US';
+%>
+    <meta name="google-site-verification" content="-r9-42OaiijcNFEbHg0HM3QdyfWyt6R-rEErIIRceak" />
+    <meta name="keywords" content="Arknights, 明日方舟, Gacha, 抽卡, 尋訪, Global, 國際服, Yostar, 悠星服, 英服, 美服, 日服, 韓服, Record, 尋訪紀錄, 紀錄分析, Analytics">
+    <meta name="description" content="<%= t('description') %>">
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<%= t('main_heading') %>" />
+    <meta property="og:url" content="<%= pageUrl %>" />
+    <meta property="og:description" content="<%= t('description') %>" />
+    <meta property="og:locale" content="<%= ogLocale %>" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "<%- t('main_heading') %>",
+      "alternateName": "Arknights Global Gacha Analyzer",
+      "url": "<%= pageUrl %>",
+      "inLanguage": "<%= hreflangMap[lang] %>"
+    }
+    </script>
+    <link rel="canonical" href="<%= pageUrl %>" />
+    <% supportedLocales.forEach(function (l) { %>
+    <link rel="alternate" hreflang="<%= hreflangMap[l] %>" href="<%= origin %>/<%= l %><%= suffix %>" />
+    <% }); %>
+    <link rel="alternate" hreflang="x-default" href="<%= origin %>/<%= defaultLocale %><%= suffix %>" />
