@@ -1,7 +1,27 @@
+712c712
+<   width: 21rem;
+---
+>   width: 28rem;
+715c715
+<   width: 19.25rem;
+---
+>   width: 12.25rem;
+794c794
+<   width: 21rem;
+---
+>   width: 28rem;
+843c843
+<   width: 17rem;
+---
+>   width: 24rem;
 869c869
 <   width: 6.75rem;
 ---
->   width: 7.75rem;
+>   width: 13rem;
+899c899
+<   width: 19.25rem;
+---
+>   width: 12.25rem;
 1097c1097
 <   padding-bottom: 6.5625rem;
 ---
